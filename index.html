@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
-  <title>Class 10 Biology - Reproduction | 3D Interactive Laboratory</title>
+  <title>CYBERLAB 3D | Class 10 Biology - Reproduction</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
   <style>
@@ -20,8 +20,8 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #020204;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       touch-action: none;
       position: fixed;
       top: 0;
@@ -46,130 +46,441 @@
       display: block;
       touch-action: none;
     }
+
+    /* =========================================================
+       IMMERSIVE SCI-FI LOADING SCREEN OVERLAY (MATCHING REFERENCE)
+       ========================================================= */
     #unity-loading-bar {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 20;
-      background: rgba(13, 17, 23, 0.90);
-      padding: 24px 32px;
-      border-radius: 16px;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-    }
-    .loading-title {
-      color: #38bdf8;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-    .loading-subtitle {
-      color: #94a3b8;
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-    #unity-progress-bar-empty {
-      width: 240px;
-      height: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
+      z-index: 50;
+      background: radial-gradient(circle at 50% 45%, rgba(18, 14, 26, 0.45) 0%, rgba(8, 7, 14, 0.88) 60%, rgba(2, 2, 5, 0.98) 100%),
+                  url('TemplateData/lab_loading_bg.jpg') center center / cover no-repeat;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.15);
     }
-    #unity-progress-bar-full {
+
+    #unity-loading-bar.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Subtle CRT / Cyber Scanlines Effect */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.22),
+        rgba(0, 0, 0, 0.22) 1.5px,
+        transparent 1.5px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Vignette Edge Shading */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.92);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Content Wrapper */
+    .loading-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 680px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    /* Top System Status Pill Badge */
+    .system-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 16px;
+      border-radius: 24px;
+      background: rgba(30, 20, 10, 0.75);
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b, 0 0 16px rgba(245, 158, 11, 0.8);
+      animation: pulseGlow 1.8s infinite ease-in-out;
+    }
+    .badge-text {
+      color: #fde68a;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: "SF Mono", Monaco, "Cascadia Code", "Courier New", monospace;
+    }
+
+    /* Main Big Bold Title */
+    .main-title {
+      color: #ffffff;
+      font-size: clamp(34px, 6vw, 56px);
+      font-weight: 900;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+      margin: 0;
+      line-height: 1.05;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.35), 0 4px 18px rgba(0, 0, 0, 0.9);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* Gold Subtitle Tag */
+    .sub-title {
+      color: #f59e0b;
+      font-size: clamp(11px, 2vw, 13px);
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 8px;
+      margin-bottom: 42px;
+      text-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* =========================================================
+       SCI-FI BRACKETED PROGRESS BAR (EXACT REFERENCE REPLICATION)
+       ========================================================= */
+    .progress-container {
+      position: relative;
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Corner Bracket Accents [ and ] */
+    .corner-bracket {
+      position: absolute;
+      width: 10px;
+      height: 26px;
+      pointer-events: none;
+      z-index: 12;
+    }
+    .bracket-left {
+      left: -6px;
+      border-left: 2.5px solid #f59e0b;
+      border-top: 2.5px solid #f59e0b;
+      border-bottom: 2.5px solid #f59e0b;
+      box-shadow: -2px 0 8px rgba(245, 158, 11, 0.4);
+    }
+    .bracket-right {
+      right: -6px;
+      border-right: 2.5px solid #f59e0b;
+      border-top: 2.5px solid #f59e0b;
+      border-bottom: 2.5px solid #f59e0b;
+      box-shadow: 2px 0 8px rgba(245, 158, 11, 0.4);
+    }
+
+    /* The Main Track */
+    .progress-track {
+      width: 100%;
+      height: 16px;
+      background: rgba(10, 10, 16, 0.92);
+      border: 1.5px solid rgba(245, 158, 11, 0.35);
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 18px rgba(245, 158, 11, 0.15);
+      position: relative;
+    }
+
+    /* The Smooth Glowing Gold Fill */
+    .progress-fill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #0284c7, #38bdf8, #818cf8);
-      border-radius: 6px;
-      transition: width 0.2s ease;
+      background: linear-gradient(90deg, #92400e, #d97706, #f59e0b, #fef08a);
+      border-radius: 2px;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.85);
     }
-    #loading-text {
-      color: #e2e8f0;
-      font-size: 12px;
+
+    /* Animated Shimmer Sweep across the Bar */
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: barShimmer 2.2s infinite ease-in-out;
+    }
+
+    /* Below the Bar: Status Message & Percentage */
+    .status-row {
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      font-family: "SF Mono", Monaco, "Cascadia Code", "Courier New", monospace;
+    }
+
+    .status-message {
+      color: #cbd5e1;
+      font-size: clamp(10px, 1.8vw, 11.5px);
       font-weight: 600;
-      margin-top: 8px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 82%;
+      transition: opacity 0.25s ease;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     }
+
+    .status-percent {
+      color: #f59e0b;
+      font-size: clamp(11.5px, 2vw, 13.5px);
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      min-width: 48px;
+      text-align: right;
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+    }
+
+    /* =========================================================
+       COMPACT LOWER-LEFT FULLSCREEN BUTTON (AUTO-HIDES ON FULLSCREEN)
+       ========================================================= */
+    #fullscreen-btn {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(245, 158, 11, 0.45);
+      background: rgba(15, 18, 25, 0.88);
+      color: #fde68a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), 0 0 12px rgba(245, 158, 11, 0.2);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+    #fullscreen-btn:hover {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b;
+      color: #ffffff;
+      transform: scale(1.08);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.85), 0 0 18px rgba(245, 158, 11, 0.5);
+    }
+    #fullscreen-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Crucial: Button completely hides whenever in fullscreen */
+    body.is-fullscreen #fullscreen-btn,
+    #fullscreen-btn.hidden {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* Warning Banner */
     #unity-warning {
       position: absolute;
       left: 50%;
       top: 15px;
       transform: translateX(-50%);
-      z-index: 30;
+      z-index: 100;
       max-width: 90%;
       text-align: center;
       font-size: 13px;
     }
-    /* Floating Mobile & Desktop Fullscreen Button */
-    #mobile-fullscreen-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      z-index: 1000;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1.5px solid rgba(56, 189, 248, 0.6);
-      color: #38bdf8;
-      padding: 10px 18px;
-      border-radius: 28px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
+
+    /* Keyframe Animations */
+    @keyframes pulseGlow {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.3);
+        opacity: 1;
+        box-shadow: 0 0 12px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.9);
+      }
     }
-    #mobile-fullscreen-btn:hover, #mobile-fullscreen-btn:active {
-      background: rgba(56, 189, 248, 0.25);
-      border-color: #38bdf8;
-      color: #ffffff;
-      transform: scale(1.05);
-    }
-    #mobile-fullscreen-btn svg {
-      width: 16px;
-      height: 16px;
+
+    @keyframes barShimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
     }
   </style>
 </head>
 <body>
   <div id="unity-container">
     <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+    <!-- Immersive Sci-Fi Loading Screen (Matching Reference) -->
     <div id="unity-loading-bar">
-      <div class="loading-title">Class 10 Biology - Reproduction</div>
-      <div class="loading-subtitle">How Do Organisms Reproduce? - 3D Laboratory</div>
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-full"></div>
+      <div class="scanlines"></div>
+      <div class="vignette"></div>
+
+      <div class="loading-content">
+        <!-- Top Pill Badge -->
+        <div class="system-badge">
+          <span class="badge-dot"></span>
+          <span class="badge-text">SYSTEM ONLINE // WEBGL 6.0</span>
+        </div>
+
+        <!-- Main Sci-Fi Titles -->
+        <h1 class="main-title">CYBERLAB 3D</h1>
+        <div class="sub-title">ASEXUAL REPRODUCTION // VIRTUAL DISCOVERY</div>
+
+        <!-- Bracketed Progress Bar -->
+        <div class="progress-container">
+          <div class="corner-bracket bracket-left"></div>
+          <div class="progress-track">
+            <div id="unity-progress-bar-full" class="progress-fill"></div>
+          </div>
+          <div class="corner-bracket bracket-right"></div>
+        </div>
+
+        <!-- Dynamic Status Row -->
+        <div class="status-row">
+          <div id="dynamic-status-text" class="status-message">CONNECTING TO SECURE CLOUD STORAGE...</div>
+          <div id="progress-percent" class="status-percent">0%</div>
+        </div>
       </div>
-      <div id="loading-text">Loading virtual lab (0%)...</div>
     </div>
+
     <div id="unity-warning"></div>
-    <button id="mobile-fullscreen-btn" title="Tap for Fullscreen">
+
+    <!-- Compact Lower-Left Fullscreen Button -->
+    <button id="fullscreen-btn" title="Toggle Fullscreen" aria-label="Toggle Fullscreen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
       </svg>
-      <span>FULLSCREEN</span>
     </button>
   </div>
 
   <script>
     var canvas = document.querySelector("#unity-canvas");
-    var loadingBar = document.querySelector("#unity-loading-bar");
+    var loadingOverlay = document.querySelector("#unity-loading-bar");
     var progressBarFull = document.querySelector("#unity-progress-bar-full");
-    var loadingText = document.querySelector("#loading-text");
+    var dynamicStatusText = document.querySelector("#dynamic-status-text");
+    var progressPercent = document.querySelector("#progress-percent");
     var warningBanner = document.querySelector("#unity-warning");
-    var fullscreenBtn = document.querySelector("#mobile-fullscreen-btn");
+    var fullscreenBtn = document.querySelector("#fullscreen-btn");
     var unityGameInstance = null;
+
+    // Minimum 10+ Dynamic Science & Loading Stages
+    var loadingStages = [
+      { at: 0,  text: "CONNECTING TO SECURE CLOUD STORAGE..." },
+      { at: 7,  text: "VERIFYING HIGH-SPEED CDN HANDSHAKE..." },
+      { at: 14, text: "DOWNLOADING 3D LABORATORY ASSETS & TEXTURES..." },
+      { at: 22, text: "INITIALIZING WEBGL 2.0 GRAPHICS ENGINE..." },
+      { at: 30, text: "COMPILING CELLULAR SHADERS & LIGHTING BUFFERS..." },
+      { at: 39, text: "CALIBRATING HIGH-PRECISION DIGITAL MICROSCOPE..." },
+      { at: 48, text: "PREPARING ASEXUAL REPRODUCTION SPECIMENS..." },
+      { at: 56, text: "MOUNTING AMOEBA & PARAMECIUM FISSION STAGES..." },
+      { at: 65, text: "GENERATING HYDRA BUDDING & REGENERATION MODELS..." },
+      { at: 73, text: "SIMULATING YEAST CELL DIVISION & SPORE FORMATION..." },
+      { at: 81, text: "BUILDING INTERACTIVE CELL NUCLEUS & ORGANELLES..." },
+      { at: 88, text: "SYNCHRONIZING AUDIO ENGINE & LAB SFX..." },
+      { at: 94, text: "CONFIGURING TOUCH CONTROLS & HUD OVERLAYS..." },
+      { at: 98, text: "SYSTEM READY - LAUNCHING VIRTUAL LAB..." }
+    ];
+
+    // Sub-stage cycling messages during long download blocks
+    var subStepMessages = [
+      "STREAMING HIGH-RESOLUTION TEXTURE ATLAS...",
+      "DECOMPRESSING BIOLOGICAL SPECIMEN MESHES...",
+      "PRE-CACHING GPU PIPELINE SHADERS...",
+      "CALIBRATING IMMERSIVE CELLULAR ENVIRONMENT...",
+      "ALLOCATING FAST-ACCESS BROWSER MEMORY BUFFERS..."
+    ];
+    var currentSubStepIdx = 0;
+    var lastProgressVal = 0;
+    var lastProgressTime = Date.now();
+
+    function updateLoadingProgress(progress) {
+      var pct = Math.min(Math.round(progress * 100), 100);
+      progressBarFull.style.width = pct + "%";
+      progressPercent.textContent = pct + "%";
+
+      // Find appropriate stage based on percentage
+      var activeText = loadingStages[0].text;
+      for (var i = 0; i < loadingStages.length; i++) {
+        if (pct >= loadingStages[i].at) {
+          activeText = loadingStages[i].text;
+        }
+      }
+
+      // If progress changed, update immediately
+      if (pct !== lastProgressVal) {
+        lastProgressVal = pct;
+        lastProgressTime = Date.now();
+        setStatusText(activeText);
+      }
+    }
+
+    function setStatusText(txt) {
+      if (dynamicStatusText.textContent !== txt) {
+        dynamicStatusText.style.opacity = "0.3";
+        setTimeout(function() {
+          dynamicStatusText.textContent = txt;
+          dynamicStatusText.style.opacity = "1";
+        }, 120);
+      }
+    }
+
+    // Periodic sub-step cycler: keeps text animated and lively even during heavy single downloads
+    setInterval(function() {
+      if (!unityGameInstance && (Date.now() - lastProgressTime > 2600)) {
+        currentSubStepIdx = (currentSubStepIdx + 1) % subStepMessages.length;
+        setStatusText(subStepMessages[currentSubStepIdx]);
+      }
+    }, 2800);
 
     function unityShowBanner(msg, type) {
       function updateVisibility() {
@@ -195,7 +506,32 @@
       updateVisibility();
     }
 
-    // Direct Browser DOM Fullscreen & Landscape Orientation Lock
+    // =========================================================
+    // FULLSCREEN HANDLING & LOWER-LEFT BUTTON AUTO-HIDE
+    // =========================================================
+    function isFullscreenActive() {
+      return !!(document.fullscreenElement ||
+                document.webkitFullscreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement);
+    }
+
+    function updateFullscreenBtnState() {
+      var fsActive = isFullscreenActive();
+      if (fsActive) {
+        document.body.classList.add('is-fullscreen');
+        fullscreenBtn.classList.add('hidden');
+      } else {
+        document.body.classList.remove('is-fullscreen');
+        fullscreenBtn.classList.remove('hidden');
+      }
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenBtnState);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenBtnState);
+    document.addEventListener('mozfullscreenchange', updateFullscreenBtnState);
+    document.addEventListener('MSFullscreenChange', updateFullscreenBtnState);
+
     function toggleFullScreen() {
       var doc = window.document;
       var docEl = doc.documentElement;
@@ -203,7 +539,7 @@
       var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
       var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
 
-      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+      if (!isFullscreenActive()) {
         if (requestFullScreen) {
           requestFullScreen.call(docEl).then(function() {
             if (screen.orientation && screen.orientation.lock) {
@@ -230,13 +566,13 @@
       toggleFullScreen();
     });
 
-    // Auto-request fullscreen on first user touch anywhere on canvas (Mobile Chrome support)
+    // Auto-request fullscreen on first user touch anywhere on canvas (Mobile device support)
     var hasAttemptedAutoFullscreen = false;
     function onFirstMobileInteraction() {
       if (!hasAttemptedAutoFullscreen) {
         hasAttemptedAutoFullscreen = true;
         var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile && !document.fullscreenElement) {
+        if (isMobile && !isFullscreenActive()) {
           toggleFullScreen();
         }
       }
@@ -279,17 +615,29 @@
       e.preventDefault();
     }, { passive: false });
 
+    // Initial state check
+    updateLoadingProgress(0);
+    updateFullscreenBtnState();
+
     // Load Unity engine
     var script = document.createElement("script");
     script.src = loaderUrl;
     script.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
-        var pct = Math.round(100 * progress);
-        progressBarFull.style.width = pct + "%";
-        loadingText.textContent = "Loading 3D Laboratory (" + pct + "%)...";
+        updateLoadingProgress(progress);
       }).then((unityInstance) => {
         unityGameInstance = unityInstance;
-        loadingBar.style.display = "none";
+        updateLoadingProgress(1.0);
+        setStatusText("SYSTEM READY - LAUNCHING VIRTUAL LAB...");
+
+        // Smooth fade out of sci-fi loading overlay
+        setTimeout(function() {
+          loadingOverlay.classList.add("fade-out");
+          setTimeout(function() {
+            loadingOverlay.style.display = "none";
+          }, 650);
+        }, 500);
+
       }).catch((message) => {
         alert("Unity load error: " + message);
       });
