@@ -73,8 +73,6 @@
       justify-content: center !important;
       z-index: 99999 !important;
       background-color: #050508 !important;
-      background: #050508 radial-gradient(circle at 50% 50%, rgba(18, 14, 26, 0.40) 0%, rgba(8, 7, 14, 0.82) 65%, rgba(2, 2, 5, 0.98) 100%),
-                  url('TemplateData/lab_loading_bg.jpg') center center / cover no-repeat !important;
       transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease;
       overflow: hidden !important;
     }
@@ -83,6 +81,28 @@
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
+    }
+
+    /* Immersive Scientific Lab Background Image */
+    img.loading-bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Cinematic Lighting Gradient Overlay */
+    .loading-overlay-gradient {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(18, 14, 26, 0.35) 0%, rgba(8, 7, 14, 0.78) 65%, rgba(2, 2, 5, 0.95) 100%);
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* Subtle CRT / Cyber Scanlines Effect */
@@ -97,7 +117,7 @@
         transparent 3px
       );
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     }
 
     /* Vignette Edge Shading */
@@ -106,7 +126,7 @@
       inset: 0;
       box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.92);
       pointer-events: none;
-      z-index: 2;
+      z-index: 3;
     }
 
     /* Central Content Wrapper (Always 100% Centered) */
@@ -383,6 +403,8 @@
 
   <!-- Top-Level Fullscreen Centered Sci-Fi Loading Overlay -->
   <div id="unity-loading-bar">
+    <img src="TemplateData/lab_loading_bg.jpg" alt="Lab Background" class="loading-bg-image" />
+    <div class="loading-overlay-gradient"></div>
     <div class="scanlines"></div>
     <div class="vignette"></div>
 
